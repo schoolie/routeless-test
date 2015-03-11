@@ -1,5 +1,5 @@
 from flask import render_template, Blueprint
-from routeless import db, apimanager
+from routeless.extensions import db, apimanager
 
 views = Blueprint('views', __name__)
 

@@ -29,12 +29,12 @@ class ResourceManager(APIManager):
             from ..models import User
             self.create_api(User, 
                             app=app, 
-                            methods=['GET', 'POST', 'DELETE'], 
-                            preprocessors={
-                                           'GET_SINGLE': [auth_func],
-                                           'GET_MANY': [auth_func],
-                                           'POST': [new_user],
-                                          },
+                            methods=['GET', 'POST', 'DELETE'],
+                            # preprocessors={
+                            #                'GET_SINGLE': [auth_func],
+                            #                'GET_MANY': [auth_func],
+                            #                'POST': [new_user],
+                            #               },
                            )
 
 # class AuthManager(JWT):

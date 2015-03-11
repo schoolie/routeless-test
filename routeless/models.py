@@ -1,8 +1,8 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask.ext.admin.contrib.sqla import ModelView
 
-
-from routeless.core import db
+from routeless.extensions import db, admin
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -15,8 +15,6 @@ class User(db.Model):
     
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
-        
-
     
     def hash_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -95,3 +93,5 @@ class LogPoint(db.Model):
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)
     type = db.Column(db.String(10))
+
+admin.add_view(ModelView(User, db.session))

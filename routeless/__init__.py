@@ -1,31 +1,12 @@
 from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.httpauth import HTTPBasicAuth
-from flask_jwt import JWT, jwt_required
-from flask_debugtoolbar import DebugToolbarExtension
-
-from api_1_0 import ResourceManager
-# from api_1_0 import AuthManager
 from config import config
-from core import db
+from extensions import db, auth, admin, jwt, apimanager
 
 # from OpenSSL import SSL
 
 # context = SSL.Context(SSL.SSLv23_METHOD)
 # context.use_privatekey_file('yourserver.key')
 # context.use_certificate_file('yourserver.crt')
-           
-@jwt_required
-def auth_func(*args, **kwargs):
-    pass
-    
-apimanager = ResourceManager(flask_sqlalchemy_db=db,
-                             preprocessors=dict(GET_MANY=[auth_func])
-                            )
-jwt = JWT()
-auth = HTTPBasicAuth()
-toolbar = DebugToolbarExtension()
-
     
 def create_app(config_name):
     app = Flask(__name__)
@@ -34,9 +15,8 @@ def create_app(config_name):
 
     db.init_app(app)
     jwt.init_app(app)
-    toolbar.init_app(app)
-    print toolbar
-    
+    admin.init_app(app)
+
     apimanager.init_api(app)
         
     from views import views
@@ -53,9 +33,7 @@ def create_app(config_name):
     def load_user(payload):
         user = User.query.filter(User.username==payload['username']).first()
         return user
-        
-    print app.url_map
-    
+
     return app
 
     
