@@ -11,18 +11,19 @@ class User(db.Model):
     courses = db.relationship('Course', backref='creator', lazy='dynamic')
     username = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(64), unique=True)
+    password = db.Column(db.String(128))
     password_hash = db.Column(db.String(128))
-    
+
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
+        self.hash_password(self.password)
     
     def hash_password(self, password):
         self.password_hash = generate_password_hash(password)
         
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
-        
-        
+
 class Course(db.Model):
     __tablename__ = 'course'
     id = db.Column(db.Integer, primary_key=True)
@@ -36,7 +37,6 @@ class Course(db.Model):
     date_edited = db.Column(db.DateTime(), default=datetime.utcnow)
     description = db.Column(db.Text())
 
-
 class Event(db.Model):
     __tablename__ = 'event'
     id = db.Column(db.Integer, primary_key=True)
@@ -46,7 +46,6 @@ class Event(db.Model):
     check_point_logs = db.relationship('CheckPointLog', backref='event', lazy='dynamic')
     date = db.Column(db.DateTime(), default=datetime.utcnow)
     time_elapsed = db.Column(db.Interval())
-
 
 class CheckPoint(db.Model):
     __tablename__ = 'check_point'
@@ -58,7 +57,6 @@ class CheckPoint(db.Model):
     title = db.Column(db.String(10))
     description = db.Column(db.String(140))
 
-
 class CheckPointLog(db.Model):
     __tablename__ = 'check_point_log'
     id = db.Column(db.Integer, primary_key=True)
@@ -68,13 +66,11 @@ class CheckPointLog(db.Model):
     found = db.Column(db.Integer)
     check_count = db.Column(db.Integer)
 
-
 class Route(db.Model):
     __tablename__ = 'route'
     id = db.Column(db.Integer, primary_key=True)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'))
     route_points = db.relationship('RoutePoint', backref='route', lazy='dynamic')
-
 
 class RoutePoint(db.Model):
     __tablename__ = 'route_point'
@@ -83,7 +79,6 @@ class RoutePoint(db.Model):
     time = db.Column(db.DateTime(), default=datetime.utcnow)
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)
-
 
 class LogPoint(db.Model):
     __tablename__ = 'log_point'
