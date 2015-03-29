@@ -34,7 +34,7 @@ class ResourceManager(APIManager):
                 Route, RoutePoint, LogPoint
 
             self.create_api( User, app=app,
-                             methods=['GET', 'POST', 'DELETE'] )
+                             methods=['GET'] )
 
             self.create_api( Course, app=app,
                              methods=['GET', 'POST', 'DELETE'] )
